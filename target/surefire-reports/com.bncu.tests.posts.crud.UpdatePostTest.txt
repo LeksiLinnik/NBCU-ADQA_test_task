@@ -1,6 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.bncu.tests.posts.crud.UpdatePostTest
--------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.494 s - in com.bncu.tests.posts.crud.UpdatePostTest
-com.bncu.tests.posts.crud.UpdatePostTest.checkPostCanBeReplaced  Time elapsed: 0.178 s
-com.bncu.tests.posts.crud.UpdatePostTest.checkPostCanBeUpdated  Time elapsed: 0.316 s

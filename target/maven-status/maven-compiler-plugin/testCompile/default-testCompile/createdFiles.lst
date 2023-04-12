@@ -1,8 +1,0 @@
-com\bncu\tests\posts\crud\DeletePostTest.class
-com\bncu\tests\posts\crud\CreatePostTest.class
-com\bncu\tests\comments\CheckCommentTest.class
-com\bncu\tests\posts\CheckPostCommentTest.class
-com\bncu\tests\posts\crud\UpdatePostTest.class
-com\bncu\tests\posts\crud\CheckPostTest.class
-com\bncu\tests\posts\crud\CreatePostNegTest.class
-com\bncu\tests\posts\crud\DeletePostNegTest.class
