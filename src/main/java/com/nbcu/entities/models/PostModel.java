@@ -7,7 +7,7 @@ public class PostModel {
 
     public static PostPojo getPost() {
         return PostPojo.builder()
-                .userId(FakeUtil.getRandomUser())
+                .userId(FakeUtil.getRandomUserId())
                 .title(FakeUtil.getRandomTitle())
                 .body(FakeUtil.getRandomBody())
                 .build();

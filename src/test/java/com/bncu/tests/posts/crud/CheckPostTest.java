@@ -1,6 +1,7 @@
 package com.bncu.tests.posts.crud;
 
 import com.nbcu.api.PostApi;
+import com.nbcu.core.FakeUtil;
 import com.nbcu.entities.pojos.PostPojo;
 import java.util.List;
 import org.assertj.core.api.SoftAssertions;
@@ -14,20 +15,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CheckPostTest {
 
     private PostApi postApi = new PostApi();
+    List<PostPojo> posts = postApi.getAllPosts();
+    //all existing posts shouldn't have empty values, decided to check random of the list
+    PostPojo post = postApi.getPostById(FakeUtil.getRandomPostIdString());
 
     @Test
-    public void checkPosts() {
-        System.out.println("start test 2.1");
-        List<PostPojo> posts = postApi.getAllPosts();
-        posts.forEach(postPojo -> assertThat(postPojo.getTitle()).as("Post shouldn't have empty title").isNotEmpty());
-        System.out.println("end test 2.1");
+    public void checkAllPostsUsers() {
+        //there shouldn't be any post that have no userId
+        posts.forEach(postPojo ->
+                assertThat(postPojo.getUserId())
+                        .as("Post should have user id")
+                        .isNotNull());
     }
 
     @Test
-    public void checkPostHasNotEmptyFields() {
-        System.out.println("start test 2.2");
-        PostPojo post = postApi.getPostById("1");
-
+    public void checkRandomPostFields() {
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(post.getUserId())
                     .as("Post should not have empty user id")
@@ -39,6 +41,5 @@ public class CheckPostTest {
                     .as("Post should not have empty body")
                     .isNotEmpty();
         });
-        System.out.println("end test 2.2");
     }
 }

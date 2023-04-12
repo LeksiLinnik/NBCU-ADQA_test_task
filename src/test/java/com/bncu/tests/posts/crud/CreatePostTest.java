@@ -8,33 +8,42 @@ import org.junit.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Execution(ExecutionMode.CONCURRENT)
 public class CreatePostTest {
 
     private PostApi postApi = new PostApi();
     private PostPojo newPostPojo = PostModel.getPost();
+    private PostPojo responsePostPojo = postApi.createNewPost(newPostPojo);
 
+    /*
+    Following test verifies if response on new post creation comes with valid values. Server doesn't allow to add
+    new data, it is fakes as if, and can be verified in response.
+     */
     @Test
-    public void checkPostCreation() {
-        System.out.println("start test 4");
-        PostPojo postPojo = postApi.createNewPost(newPostPojo);
+    public void checkPostCreationResponse() {
         SoftAssertions.assertSoftly(softly -> {
-            //following validations verifies if response comes with valid values
-            softly.assertThat(postPojo.getUserId())
+            softly.assertThat(responsePostPojo.getUserId())
                     .as("New post is not created with user id")
                     .isEqualTo(newPostPojo.getUserId());
-            softly.assertThat(postPojo.getTitle())
+            softly.assertThat(responsePostPojo.getTitle())
                     .as("New post is not created with title")
                     .isEqualTo(newPostPojo.getTitle());
-            softly.assertThat(postPojo.getBody())
+            softly.assertThat(responsePostPojo.getBody())
                     .as("New post is not created with body")
                     .isEqualTo(newPostPojo.getBody());
-            //this validation checks if the newly created post is in the list
-            //will fail because "resource will not be really updated on the server but it will be faked as if."
-            softly.assertThat(postApi.getAllPosts())
-                    .as("New post is not displayed in a list")
-                    .contains(newPostPojo);
         });
-        System.out.println("end test 4");
+    }
+
+    /*
+    Following test verifies if the newly created post is in the list, but, as server doesn't allow to add new data,
+    despite the fact it is fakes as if, it is decided to verify it is not created
+     */
+    @Test
+    public void checkCreatedPostIsInList() {
+        assertThat(postApi.getAllPosts())
+                    .as("New post is not displayed in a list")
+                    .doesNotContain(newPostPojo);
     }
 }

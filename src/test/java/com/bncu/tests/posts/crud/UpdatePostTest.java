@@ -1,6 +1,7 @@
 package com.bncu.tests.posts.crud;
 
 import com.nbcu.api.PostApi;
+import com.nbcu.core.FakeUtil;
 import com.nbcu.entities.models.PostModel;
 import com.nbcu.entities.pojos.PostPojo;
 import org.assertj.core.api.SoftAssertions;
@@ -8,18 +9,19 @@ import org.junit.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @Execution(ExecutionMode.CONCURRENT)
 public class UpdatePostTest {
 
     private PostApi postApi = new PostApi();
-    private PostPojo postPojo = postApi.getPostById("2");
+    private PostPojo postPojo = postApi.getPostById(FakeUtil.getRandomPostIdString());
     private PostPojo newPostPojo = PostModel.getPost();
     private PostPojo updatedPostPojo;
     private PostPojo replacedPostPojo;
 
     @Test
-    public void checkPostCanBeUpdated() {
-        System.out.println("start test 7.1");
+    public void checkPostUpdatedResponse() {
         postPojo.setBody(newPostPojo.getBody());
         updatedPostPojo = postApi.updatePost(postPojo, String.valueOf(postPojo.getId()));
         SoftAssertions.assertSoftly(softly -> {
@@ -36,12 +38,20 @@ public class UpdatePostTest {
                     .as("Post is expected to have updated body")
                     .isEqualTo(newPostPojo.getBody());
         });
-        System.out.println("end test 7.1");
+    }
+
+    //due to api restrictions of updating - verified that updated post is not in the list
+    @Test
+    public void checkPostCanBeUpdated() {
+        postPojo.setBody(newPostPojo.getBody());
+        updatedPostPojo = postApi.updatePost(postPojo, String.valueOf(postPojo.getId()));
+        assertThat(postApi.getAllPosts())
+                .as("Post is not expected to be in a list")
+                .doesNotContain(updatedPostPojo);
     }
 
     @Test
-    public void checkPostCanBeReplaced() {
-        System.out.println("start test 7.2");
+    public void checkPostReplacedResponse() {
         replacedPostPojo = postApi.replacePost(newPostPojo, String.valueOf(postPojo.getId()));
         SoftAssertions.assertSoftly(softly -> {
             softly.assertThat(replacedPostPojo.getId())
@@ -57,6 +67,14 @@ public class UpdatePostTest {
                     .as("Post is expected to have updated body")
                     .isEqualTo(newPostPojo.getBody());
         });
-        System.out.println("end test 7.2");
+    }
+
+    //due to api restrictions of updating - verified that replaced post is not in the list
+    @Test
+    public void checkPostCanBeReplaced() {
+        replacedPostPojo = postApi.replacePost(newPostPojo, String.valueOf(postPojo.getId()));
+        assertThat(postApi.getAllPosts())
+                .as("Post is not expected to be in a list")
+                .doesNotContain(replacedPostPojo);
     }
 }
